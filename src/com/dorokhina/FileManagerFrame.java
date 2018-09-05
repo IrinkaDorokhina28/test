@@ -103,7 +103,7 @@ public class FileManagerFrame extends JFrame {
 			    		JMenuItem menuCopy = new JMenuItem();
 			    		JMenuItem menuMove = new JMenuItem();
 			    		menuDelete.addActionListener(event -> FileManagerUtils.deleteFile(f));
-			    		menuCopy.
+			    		//menuCopy.
 			    		//***************************************//
 //			    		JMenuItem menu = new JMenuItem();   
 //			    		add(menu);
