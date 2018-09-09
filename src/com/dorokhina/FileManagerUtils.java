@@ -8,8 +8,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 public class FileManagerUtils {
-	public static void copyFile(File file, Path path) {
-		Path p1 = file.toPath();
+	public static void copyFile(Path file, Path path) {
+		Path p1 = file;
 		Path p2 = path;
 		try {
 			Files.copy(p1, p2, StandardCopyOption.REPLACE_EXISTING);
@@ -21,9 +21,9 @@ public class FileManagerUtils {
 		}
 	}
 
-	public static void moveFile(File file, Path path) {
-		Path p3 = file.toPath();
-		Path p4 = Paths.get(path.toFile().getAbsolutePath(), file.getName());
+	public static void moveFile(Path file, Path path) {
+		Path p3 = file;
+		Path p4 = Paths.get(path.toFile().getAbsolutePath(), file.toFile().getName());
 	
 		try {
 			Files.move(p3, p4);

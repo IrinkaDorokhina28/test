@@ -42,6 +42,8 @@ public class FileManagerFrame extends JFrame {
 	JPanel panel1 = null;
 	JPanel lowPanel = null;
 	//JPanel panel3 = null;
+	Path buffer = null;
+	Path buffer2 = null;
 	File file;
 	
 	FileManagerFrame(File file) {
@@ -99,31 +101,55 @@ public class FileManagerFrame extends JFrame {
 			    		}
 			    	}
 			    	if (e.getButton() == MouseEvent.BUTTON3){
-			    		
-			    		
-			    		Path path = Paths.get("/Users/irinadorokhina/Documents");
+
 			    		JPopupMenu popup = new JPopupMenu();
 			    		JMenuItem menuDelete = new JMenuItem("delete");
 			    		JMenuItem menuCopy = new JMenuItem("copy");
 			    		JMenuItem menuMove = new JMenuItem("move");
+			    		
+			    		if (buffer != null) {
+    			    		JMenuItem menuPaste = new JMenuItem("move here");
+    			    		menuPaste.addActionListener(event -> {
+    			    			if (f.isDirectory()) {
+    			    				FileManagerUtils.moveFile(buffer, f.toPath());		    			    		
+    			    			} else {    			    				
+    			    				FileManagerUtils.moveFile(buffer, f.getParentFile().toPath());
+		    			    		
+    			    			}
+    			    			buffer = null;
+    			    			repaint(file, null);
+    			    		});
+    			    		popup.add(menuPaste);
+			    		}
+			    		
+			    		if (buffer2 != null) {
+    			    		JMenuItem menuPaste = new JMenuItem("paste");
+    			    		menuPaste.addActionListener(event -> {
+    			    			if (f.isDirectory()) {
+    			    				FileManagerUtils.copyFile(buffer2, f.toPath());		    			    		
+    			    			} else {    			    				
+    			    				FileManagerUtils.copyFile(buffer2, f.getParentFile().toPath());
+		    			    		
+    			    			}
+    			    			buffer = null;
+    			    			repaint(file, null);
+    			    		});
+    			    		popup.add(menuPaste);
+			    		}
+			    		
 			    		menuDelete.addActionListener(event -> {
 			    			FileManagerUtils.deleteFile(f);
 			    			repaint(file, null);
 			    		});
-			    		menuMove.addActionListener(event -> {
-			    			
-//			    			p.addMouseListener(new MouseAdapter() {  			
-//			    			    public void mouseClicked(MouseEvent e) {
-//			    			    	
-//			    			    		
-//			    			    	}
-//			    			});
-			    			FileManagerUtils.moveFile(f, path);
-			    			repaint(file, f.getParentFile());
+			    		
+			    		
+			    		menuMove.addActionListener(event -> {			  
+			    			buffer = f.toPath();			    						    			
 			    		});
+			    		
+			    		
 			    		menuCopy.addActionListener(event -> {
-			    			FileManagerUtils.copyFile(f, path);
-			    			repaint(file, f.getParentFile());
+			    			buffer2 = f.toPath();
 			    		});
 			    		popup.add(menuDelete);
 			    		popup.add(menuCopy);
