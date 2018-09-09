@@ -12,7 +12,7 @@ public class FileManagerUtils {
 		Path p1 = file.toPath();
 		Path p2 = path;
 		try {
-			Files.copy(p1, p2);
+			Files.copy(p1, p2, StandardCopyOption.REPLACE_EXISTING);
 			System.out.println(p2);
 			System.out.println(Files.exists(p2));
 		} catch (IOException e) {
@@ -23,10 +23,10 @@ public class FileManagerUtils {
 
 	public static void moveFile(File file, Path path) {
 		Path p3 = file.toPath();
-		Path p4 = path;
+		Path p4 = Paths.get(path.toFile().getAbsolutePath(), file.getName());
 	
 		try {
-			Files.move(p3, p4, StandardCopyOption.REPLACE_EXISTING);
+			Files.move(p3, p4);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

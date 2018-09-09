@@ -68,6 +68,7 @@ public class FileManagerFrame extends JFrame {
 	
 	public JScrollPane getPanel2(File file, File selected) {				
 		JPanel panel2 = new JPanel();
+		panel2.setSize(400, 600);
 		JScrollPane scrollPane = new JScrollPane(panel2);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		JLabel back = new JLabel(" .. ");
@@ -82,7 +83,7 @@ public class FileManagerFrame extends JFrame {
 		}); 
 		
 		File[] files = file.listFiles();
-		Comparator<File> fileComparator = ((a1, a2) -> a1.isDirectory()? -1 : 1);
+		Comparator<File> fileComparator = ((a1, a2) -> (a1.isDirectory() && a2.isFile())? -1 : (a1.isFile() && a2.isDirectory())? 1 : a1.compareTo(a2));
 		Arrays.sort(files,  fileComparator);
 		panel2.setLayout(new GridLayout(files.length + 1, 1, 1, 1));
 		for(File f: files) {
@@ -98,11 +99,38 @@ public class FileManagerFrame extends JFrame {
 			    		}
 			    	}
 			    	if (e.getButton() == MouseEvent.BUTTON3){
+			    		
+			    		
+			    		Path path = Paths.get("/Users/irinadorokhina/Documents");
 			    		JPopupMenu popup = new JPopupMenu();
-			    		JMenuItem menuDelete = new JMenuItem();
-			    		JMenuItem menuCopy = new JMenuItem();
-			    		JMenuItem menuMove = new JMenuItem();
-			    		menuDelete.addActionListener(event -> FileManagerUtils.deleteFile(f));
+			    		JMenuItem menuDelete = new JMenuItem("delete");
+			    		JMenuItem menuCopy = new JMenuItem("copy");
+			    		JMenuItem menuMove = new JMenuItem("move");
+			    		menuDelete.addActionListener(event -> {
+			    			FileManagerUtils.deleteFile(f);
+			    			repaint(file, null);
+			    		});
+			    		menuMove.addActionListener(event -> {
+			    			
+//			    			p.addMouseListener(new MouseAdapter() {  			
+//			    			    public void mouseClicked(MouseEvent e) {
+//			    			    	
+//			    			    		
+//			    			    	}
+//			    			});
+			    			FileManagerUtils.moveFile(f, path);
+			    			repaint(file, f.getParentFile());
+			    		});
+			    		menuCopy.addActionListener(event -> {
+			    			FileManagerUtils.copyFile(f, path);
+			    			repaint(file, f.getParentFile());
+			    		});
+			    		popup.add(menuDelete);
+			    		popup.add(menuCopy);
+			    		popup.add(menuMove);
+			            popup.show(FileManagerFrame.this, e.getX(), e.getY());
+			           
+			    		
 			    		//menuCopy.
 			    		//***************************************//
 //			    		JMenuItem menu = new JMenuItem();   
@@ -121,6 +149,7 @@ public class FileManagerFrame extends JFrame {
 
 		return scrollPane;
 	}
+	
 	
 	public void saveFile(File file, String arrayLines) {
 		PrintWriter pw = null;
@@ -199,6 +228,9 @@ public class FileManagerFrame extends JFrame {
 	}
 	
 	public void repaint(File file, File selected) {
+//		if(file == null) {
+//			file = new File("/Users/irinadorokhina/");
+//		}
 		panel1.setVisible(false);
 		lowPanel.setVisible(false);
 		//panel3.setVisible(false);
